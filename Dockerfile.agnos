@@ -5,8 +5,8 @@ FROM scratch AS agnos-base
 ADD ubuntu-base-20.04.1-base-arm64.tar.gz /
 
 # Add aarch64 and arm support
-COPY --from=multiarch/qemu-user-static:x86_64-aarch64 /usr/bin/qemu-aarch64-static /usr/bin
-COPY --from=multiarch/qemu-user-static:x86_64-arm /usr/bin/qemu-arm-static /usr/bin
+# COPY --from=multiarch/qemu-user-static:x86_64-aarch64 /usr/bin/qemu-aarch64-static /usr/bin
+# COPY --from=multiarch/qemu-user-static:x86_64-arm /usr/bin/qemu-arm-static /usr/bin
 
 # Build folder
 RUN mkdir -p /tmp/agnos
@@ -57,12 +57,12 @@ RUN /tmp/agnos/compile-qtwayland5.sh
 # ################### #
 FROM agnos-base
 
-# Hardware setup
-RUN mkdir -p /tmp/agnos/debs
-COPY ./userspace/debs /tmp/agnos/debs
-COPY ./userspace/hardware_setup.sh /tmp/agnos
-RUN /tmp/agnos/hardware_setup.sh
-RUN mv /data/persist /system/ && rm -rf /data/*
+# # Hardware setup
+# RUN mkdir -p /tmp/agnos/debs
+# COPY ./userspace/debs /tmp/agnos/debs
+# COPY ./userspace/hardware_setup.sh /tmp/agnos
+# RUN /tmp/agnos/hardware_setup.sh
+# RUN mv /data/persist /system/ && rm -rf /data/*
 
 # Build ModemManager
 COPY ./userspace/compile-modemmanager.sh /tmp/agnos/
@@ -112,14 +112,14 @@ COPY ./userspace/install_extras.sh /tmp/agnos/
 RUN /tmp/agnos/install_extras.sh
 
 # 16.04 libwayland-client + libffi6
-COPY ./userspace/qtwayland/libffi.so.6 /lib/aarch64-linux-gnu/
-COPY ./userspace/qtwayland/libwayland-client.so.0 /lib/aarch64-linux-gnu/libwayland-client.so.0
+# COPY ./userspace/qtwayland/libffi.so.6 /lib/aarch64-linux-gnu/
+# COPY ./userspace/qtwayland/libwayland-client.so.0 /lib/aarch64-linux-gnu/libwayland-client.so.0
 
 COPY --from=agnos-compiler-qtwayland5 /tmp/qtwayland5.deb /tmp/qtwayland5.deb
 RUN cd /tmp && apt-get -o Dpkg::Options::="--force-overwrite" install -yq --allow-downgrades ./qtwayland5.deb
 
 # Patched libeglSubDriverWayland with fixed nullptr deref in CommitBuffer
-COPY ./userspace/files/libeglSubDriverWayland.so.patched /lib/aarch64-linux-gnu/libeglSubDriverWayland.so
+# COPY ./userspace/files/libeglSubDriverWayland.so.patched /lib/aarch64-linux-gnu/libeglSubDriverWayland.so
 
 COPY ./userspace/home/ /home/$USERNAME/
 COPY ./userspace/home/.config/ /root/.config
@@ -157,6 +157,13 @@ RUN dpkg -i /tmp/linux-headers-4.9.103+_4.9.103+-1_arm64.deb
 # Weston with hacked touch rotate and color correction
 #COPY ./userspace/files/weston /usr/bin/weston
 #COPY ./userspace/files/gl-renderer.so /usr/lib/arm-linux-gnueabihf/weston
+
+# TODO: REMOVE FROM HERE - Hardware setup
+RUN mkdir -p /tmp/agnos/debs
+COPY ./userspace/debs /tmp/agnos/debs
+COPY ./userspace/hardware_setup.sh /tmp/agnos
+RUN /tmp/agnos/hardware_setup.sh
+RUN mv /data/persist /system/ && rm -rf /data/*
 
 # Setup systemd services
 COPY ./userspace/services.sh /tmp/agnos

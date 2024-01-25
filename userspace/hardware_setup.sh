@@ -2,10 +2,8 @@
 
 # Install driver deb files (we're fine with overwriting stuff too)
 cd /tmp/agnos/debs
-apt-get -o Dpkg::Options::="--force-overwrite" install -yq \
-  ./agnos-base.deb \
-  ./agnos-display_0.0.1.deb \
-  ./agnos-wlan_0.0.2.deb
+mkdir -p /usr/lib/aarch64-linux-gnu/libweston-8/
+apt-get -o Dpkg::Options::="--force-overwrite" -f install -yq ./*.deb
 
 # Install 16.04 version of libjson-c2
 cd /tmp
