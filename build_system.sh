@@ -23,12 +23,12 @@ SKIP_CHUNKS_IMAGE="$OUTPUT_DIR/system-skip-chunks.img"
 mkdir -p $BUILD_DIR $OUTPUT_DIR
 
 # Copy kernel modules over
-if ! ls $OUTPUT_DIR/*.ko >/dev/null 2>&1; then
-  echo "kernel modules missing. run ./build_kernel.sh first"
-  exit 1
-fi
-cp $OUTPUT_DIR/wlan.ko $DIR/userspace/usr/comma
-cp $OUTPUT_DIR/snd*.ko $DIR/userspace/usr/comma/sound/
+# if ! ls $OUTPUT_DIR/*.ko >/dev/null 2>&1; then
+#   echo "kernel modules missing. run ./build_kernel.sh first"
+#   exit 1
+# fi
+# cp $OUTPUT_DIR/wlan.ko $DIR/userspace/usr/comma
+# cp $OUTPUT_DIR/snd*.ko $DIR/userspace/usr/comma/sound/
 
 # Download Ubuntu Base if not done already
 if [ ! -f $UBUNTU_FILE ]; then
@@ -44,7 +44,7 @@ fi
 # Start docker build
 echo "Building image"
 export DOCKER_CLI_EXPERIMENTAL=enabled
-docker build -f Dockerfile.agnos -t agnos-builder $DIR
+docker build -f Dockerfile.agnos -t agnos-builder-extract $DIR
 
 # Create filesystem ext4 image
 echo "Creating empty filesystem"
@@ -59,7 +59,7 @@ sudo mount $ROOTFS_IMAGE $ROOTFS_DIR
 
 # Extract image
 echo "Extracting docker image"
-CONTAINER_ID=$(docker container create --entrypoint /bin/bash agnos-builder:latest)
+CONTAINER_ID=$(docker container create --entrypoint /bin/bash agnos-builder-extract:latest)
 docker container export -o $BUILD_DIR/filesystem.tar $CONTAINER_ID
 docker container rm $CONTAINER_ID > /dev/null
 cd $ROOTFS_DIR
@@ -82,19 +82,19 @@ sudo bash -c "printf \"$GIT_HASH\n$DATETIME\" > BUILD"
 
 cd $DIR
 
-# Unmount image
-echo "Unmount filesystem"
-sudo umount -l $ROOTFS_DIR
+# # Unmount image
+# echo "Unmount filesystem"
+# sudo umount -l $ROOTFS_DIR
 
-# Sparsify
-echo "Sparsify image"
-TMP_SPARSE="$(mktemp)"
-img2simg $ROOTFS_IMAGE $TMP_SPARSE
-mv $TMP_SPARSE $SPARSE_IMAGE
+# # Sparsify
+# echo "Sparsify image"
+# TMP_SPARSE="$(mktemp)"
+# img2simg $ROOTFS_IMAGE $TMP_SPARSE
+# mv $TMP_SPARSE $SPARSE_IMAGE
 
-# Make image with skipped chunks
-TMP_SKIP="$(mktemp)"
-$DIR/tools/simg2dontcare.py $SPARSE_IMAGE $TMP_SKIP
-mv $TMP_SKIP $SKIP_CHUNKS_IMAGE
+# # Make image with skipped chunks
+# TMP_SKIP="$(mktemp)"
+# $DIR/tools/simg2dontcare.py $SPARSE_IMAGE $TMP_SKIP
+# mv $TMP_SKIP $SKIP_CHUNKS_IMAGE
 
 echo "Done!"
