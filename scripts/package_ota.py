@@ -25,7 +25,7 @@ def compress(fin, fout) -> None:
   subprocess.check_call(f"xz -T4 -vc {fin} > {fout}", shell=True)
 
 
-def process_file(fn, name, sparse=False, full_check=True, has_ab=True, alt=None):
+def process_file(fn, name, sparse=False, full_check=True, has_ab=True):
   print(name)
   hash_raw = hash = checksum(fn)
   size = fn.stat().st_size
@@ -54,22 +54,6 @@ def process_file(fn, name, sparse=False, full_check=True, has_ab=True, alt=None)
     "has_ab": has_ab,
   }
 
-  if alt is not None:
-    print("  calculating alt")
-    alt_hash = checksum(alt)
-    alt_size = alt.stat().st_size
-    print(f"  {alt_size} bytes, hash {alt_hash} (alt)")
-
-    print("  compressing alt")
-    alt_xz_fn = OTA_OUTPUT_DIR / f"{alt.stem}-{hash_raw}.img.xz"
-    compress(alt, alt_xz_fn)
-
-    ret["alt"] = {
-      "hash": alt_hash,
-      "url": "{remote_url}/" + alt_xz_fn.name,
-      "size": alt_size,
-    }
-
   return ret
 
 
@@ -78,7 +62,7 @@ if __name__ == "__main__":
 
   files = [
     process_file(OUTPUT_DIR / "boot.img", "boot"),
-    process_file(OUTPUT_DIR / "system.img", "system", sparse=True, full_check=False, alt=OUTPUT_DIR / "system-skip-chunks.img"),
+    process_file(OUTPUT_DIR / "system.img", "system", sparse=True, full_check=False),
   ]
   configs = [
     (AGNOS_UPDATE_URL, "ota.json"),
@@ -104,8 +88,6 @@ if __name__ == "__main__":
     processed_files = []
     for f in deepcopy(files):
       f["url"] = f["url"].format(remote_url=remote_url)
-      if "alt" in f:
-        f["alt"]["url"] = f["alt"]["url"].format(remote_url=remote_url)
       processed_files.append(f)
 
     with open(OTA_OUTPUT_DIR / output_fn, "w") as out:
