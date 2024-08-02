@@ -104,10 +104,11 @@ set_network_stuff() {
 
   # Write build info
   DATETIME=$(date '+%Y-%m-%dT%H:%M:%S')
-  bash -c "printf \"$GIT_HASH\n$DATETIME\" > BUILD"
+  bash -c "printf \"$GIT_HASH\n$DATETIME\n$GIT_BRANCH\" > BUILD"
 }
 GIT_HASH=$(git --git-dir=$DIR/.git rev-parse HEAD)
-exec_as_root bash -c "set -e; export ROOTFS_DIR=$ROOTFS_DIR GIT_HASH=$GIT_HASH; $(declare -f set_network_stuff); set_network_stuff"
+GIT_BRANCH=$(git --git-dir=$DIR/.git rev-parse --abbrev-ref HEAD)
+exec_as_root bash -c "set -e; export ROOTFS_DIR=$ROOTFS_DIR GIT_HASH=$GIT_HASH GIT_BRANCH=$GIT_BRANCH; $(declare -f set_network_stuff); set_network_stuff"
 
 # Unmount image
 echo "Unmount filesystem"
