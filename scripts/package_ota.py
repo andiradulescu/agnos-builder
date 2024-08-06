@@ -5,7 +5,6 @@ import hashlib
 import subprocess
 from copy import deepcopy
 from pathlib import Path
-from tempfile import NamedTemporaryFile
 
 ROOT = Path(__file__).parent.parent
 OUTPUT_DIR = ROOT / "output"
@@ -25,19 +24,11 @@ def compress(fin, fout) -> None:
   subprocess.check_call(f"xz -T4 -vc {fin} > {fout}", shell=True)
 
 
-def process_file(fn, name, sparse=False, full_check=True, has_ab=True):
+def process_file(fn, name, full_check=True, has_ab=True):
   print(name)
   hash_raw = hash = checksum(fn)
   size = fn.stat().st_size
   print(f"  {size} bytes, hash {hash}")
-
-  if sparse:
-    with NamedTemporaryFile() as tmp_f:
-      print("  converting sparse image to raw")
-      subprocess.check_call(["simg2img", fn, tmp_f.name], shell=True)
-      hash_raw = checksum(tmp_f.name)
-      size = Path(tmp_f.name).stat().st_size
-      print(f"  {size} bytes, hash {hash} (raw)")
 
   print("  compressing")
   xz_fn = OTA_OUTPUT_DIR / f"{fn.stem}-{hash_raw}.img.xz"
@@ -49,7 +40,6 @@ def process_file(fn, name, sparse=False, full_check=True, has_ab=True):
     "hash": hash,
     "hash_raw": hash_raw,
     "size": size,
-    "sparse": sparse,
     "full_check": full_check,
     "has_ab": has_ab,
   }
@@ -62,7 +52,7 @@ if __name__ == "__main__":
 
   files = [
     process_file(OUTPUT_DIR / "boot.img", "boot"),
-    process_file(OUTPUT_DIR / "system.img", "system", sparse=True, full_check=False),
+    process_file(OUTPUT_DIR / "system.img", "system", full_check=False),
   ]
   configs = [
     (AGNOS_UPDATE_URL, "ota.json"),
@@ -79,7 +69,6 @@ if __name__ == "__main__":
         "hash": fw["hash"],
         "hash_raw": fw["hash"],
         "size": fw["size"],
-        "sparse": False,
         "full_check": True,
         "has_ab": True,
       })
