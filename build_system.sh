@@ -121,7 +121,7 @@ echo "Unmount filesystem"
 exec_as_root umount -l $ROOTFS_DIR
 
 # Reduce system image to the minimum size
-exec_as_user e2fsck -f $ROOTFS_IMAGE
+exec_as_user e2fsck -fy $ROOTFS_IMAGE
 exec_as_user resize2fs -M $ROOTFS_IMAGE
 
 # Move system image to output
