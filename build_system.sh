@@ -120,7 +120,11 @@ exec_as_root bash -c "set -e; export ROOTFS_DIR=$ROOTFS_DIR GIT_HASH=$GIT_HASH; 
 echo "Unmount filesystem"
 exec_as_root umount -l $ROOTFS_DIR
 
-# Move image to output
+# Reduce system image to the minimum size
+exec_as_user e2fsck -f $ROOTFS_IMAGE
+exec_as_user resize2fs -M $ROOTFS_IMAGE
+
+# Move system image to output
 mv $ROOTFS_IMAGE $OUTPUT_DIR
 
 # Clean build folder

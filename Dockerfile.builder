@@ -17,6 +17,7 @@ RUN apt-get update && \
     python-is-python2 \
     openssl \
     ccache \
+    e2fsprogs \
     && rm -rf /var/lib/apt/lists/*
 
 RUN if [ ${UID:-0} -ne 0 ] && [ ${GID:-0} -ne 0 ]; then \
