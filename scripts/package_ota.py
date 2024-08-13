@@ -9,6 +9,7 @@ from pathlib import Path
 ROOT = Path(__file__).parent.parent
 OUTPUT_DIR = ROOT / "output"
 OTA_OUTPUT_DIR = OUTPUT_DIR / "ota"
+BUILD_DIR = ROOT / "build"
 
 AGNOS_UPDATE_URL = os.getenv("AGNOS_UPDATE_URL", "https://commadist.azureedge.net/agnosupdate")
 AGNOS_STAGING_UPDATE_URL = os.getenv("AGNOS_STAGING_UPDATE_URL", "https://commadist.azureedge.net/agnosupdate-staging")
