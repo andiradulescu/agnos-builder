@@ -120,4 +120,10 @@ exec_as_root bash -c "set -e; export ROOTFS_DIR=$ROOTFS_DIR GIT_HASH=$GIT_HASH; 
 echo "Unmount filesystem"
 exec_as_root umount -l $ROOTFS_DIR
 
+# Move image to output
+mv $ROOTFS_IMAGE $OUTPUT_DIR
+
+# Clean build folder
+rm -rf $BUILD_DIR
+
 echo "Done!"
