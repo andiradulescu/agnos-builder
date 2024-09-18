@@ -55,6 +55,8 @@ elif ! mountpoint -q /data; then
   echo "userdata not mounted. loading system reset"
   if [ "$(head -c 15 /dev/disk/by-partlabel/userdata)" == "COMMA_RESET" ]; then
     $RESET --format
+  elif e2fsck -n /dev/disk/by-partlabel/userdata > /dev/null 2>&1 && [ $? -ge 1 ] && [ $? -le 3 ]; then
+    $RESET --repair
   else
     $RESET --recover
   fi
