@@ -127,18 +127,18 @@ rm -f $OUT_IMAGE
 # testing multiple compression methods
 
 # xz - https://www.mankier.com/1/mksquashfs#Compressors_Available_and_Compressor_Specific_Options-xz
-exec_as_root mksquashfs $ROOTFS_DIR $OUT_IMAGE.xz -comp xz -Xbcj arm -b 1M -Xdict-size 100%
+# exec_as_root mksquashfs $ROOTFS_DIR $OUT_IMAGE.xz -comp xz -Xbcj arm -b 1M -Xdict-size 100%
 
 # gzip - https://www.mankier.com/1/mksquashfs#Compressors_Available_and_Compressor_Specific_Options-gzip_(default)
-exec_as_root mksquashfs $ROOTFS_DIR $OUT_IMAGE.gz -comp gzip
+# exec_as_root mksquashfs $ROOTFS_DIR $OUT_IMAGE.gz -comp gzip
 
 # lzo - https://www.mankier.com/1/mksquashfs#Compressors_Available_and_Compressor_Specific_Options-lzo
-exec_as_root mksquashfs $ROOTFS_DIR $OUT_IMAGE.lzo -comp lzo -b 1M -no-xattrs
+# exec_as_root mksquashfs $ROOTFS_DIR $OUT_IMAGE.lzo -comp lzo -b 1M
 
 # lz4 - https://www.mankier.com/1/mksquashfs#Compressors_Available_and_Compressor_Specific_Options-lz4
-exec_as_root mksquashfs $ROOTFS_DIR $OUT_IMAGE.lz4 -comp lz4 -b 1M -no-xattrs
+# exec_as_root mksquashfs $ROOTFS_DIR $OUT_IMAGE.lz4 -comp lz4 -b 1M
 
 # lz4hc - lz4 highest compression
-exec_as_root mksquashfs $ROOTFS_DIR $OUT_IMAGE.lz4hc -comp lz4 -b 1M -no-xattrs -Xhc
+exec_as_root mksquashfs $ROOTFS_DIR $OUT_IMAGE -comp lz4 -b 1M -Xhc
 
 echo "Done!"
