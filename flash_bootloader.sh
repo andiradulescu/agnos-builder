@@ -7,7 +7,7 @@ DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null && pwd)"
 cd $DIR
 
 echo "Flashing bootloader..."
-tools/edl w abl_a output/abl.elf
-tools/edl w abl_b output/abl.elf
+tools/edl w abl_a output/abl.img
+tools/edl w abl_b output/abl.img
 
 echo -e "${GREEN}Flashed abl_a and abl_b!${NO_COLOR}"
