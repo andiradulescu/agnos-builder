@@ -10,11 +10,7 @@ apt-fast install --no-install-recommends -yq \
     build-essential \
     casync \
     clang \
-    clinfo \
-    cmake \
     curl \
-    darkstat \
-    dkms \
     gpiod \
     libarchive-dev \
     libass-dev \
@@ -31,7 +27,6 @@ apt-fast install --no-install-recommends -yq \
     libportaudio2 \
     libsdl2-dev \
     libsqlite3-dev \
-    libsystemd-dev \
     libtool \
     libusb-1.0-0-dev \
     libuv1-dev \
@@ -51,9 +46,6 @@ apt-fast install --no-install-recommends -yq \
     libxkbcommon-x11-0 \
     locales \
     nethogs \
-    ocl-icd-libopencl1 \
-    ocl-icd-opencl-dev \
-    opencl-headers \
     pkg-config \
     portaudio19-dev \
     texinfo \

@@ -56,7 +56,6 @@ apt-fast install --no-install-recommends -yq \
     apport-retrace \
     bc \
     build-essential \
-    bzip2 \
     curl \
     cpuset \
     dfu-util \
@@ -89,16 +88,13 @@ apt-fast install --no-install-recommends -yq \
     network-manager \
     openssl \
     ppp \
-    smartmontools \
     speedtest-cli \
-    squashfs-tools \
     ssh \
     sshfs \
     sudo \
     systemd-resolved \
     systemd-timesyncd \
     traceroute \
-    tk-dev \
     ubuntu-minimal \
     ubuntu-server \
     ubuntu-standard \
