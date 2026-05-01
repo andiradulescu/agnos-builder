@@ -57,7 +57,6 @@ apt-fast install --no-install-recommends -yq \
     libi2c-dev \
     libncursesw5-dev \
     libnss-myhostname \
-    libqmi-utils \
     libssl-dev \
     locales \
     llvm \
