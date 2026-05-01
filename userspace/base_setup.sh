@@ -8,6 +8,10 @@ HOST=comma
 touch /TICI
 touch /AGNOS
 
+# Set up usr-merged lib64 since it's not done by default in 24.04-base.
+mkdir -p /usr/lib64
+ln -sTfn usr/lib64 /lib64
+
 # Install apt-fast
 apt-get update
 apt-get install -yq curl sudo wget
@@ -29,6 +33,7 @@ adduser $USERNAME adm
 adduser $USERNAME gpu
 adduser $USERNAME audio
 adduser $USERNAME disk
+adduser $USERNAME netdev
 adduser $USERNAME dialout
 adduser $USERNAME systemd-journal
 

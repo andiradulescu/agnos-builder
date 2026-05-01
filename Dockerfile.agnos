@@ -83,15 +83,10 @@ FROM agnos-base
 # Hardware rootfs overlay
 COPY ./userspace/root/etc/ /etc/
 COPY ./userspace/root/lib/ /usr/lib/
-COPY ./userspace/root/lib64/ /usr/lib64/
 COPY ./userspace/root/sbin/ /usr/sbin/
 COPY ./userspace/root/system/ /system/
 COPY ./userspace/root/usr/ /usr/
 RUN mkdir -p /dsp /firmware /persist /data /cache /rwtmp
-
-# Hardware setup
-COPY ./userspace/hardware_setup.sh /tmp/agnos
-RUN /tmp/agnos/hardware_setup.sh
 
 COPY --from=agnos-compiler-libqmi /tmp/libqmi.deb /tmp/
 COPY --from=agnos-compiler-modemmanager /tmp/modemmanager.deb /tmp/
