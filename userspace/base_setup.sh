@@ -28,12 +28,13 @@ apt-fast install --no-install-recommends -yq \
     build-essential \
     curl \
     cpuset \
-    dfu-util \
+    dnsmasq-base \
     evtest \
     git \
     git-core \
     git-lfs \
     gdb \
+    hostapd \
     htop \
     i2c-tools \
     ifmetric \
@@ -48,7 +49,6 @@ apt-fast install --no-install-recommends -yq \
     libegl1 \
     libegl-dev \
     libffi-dev \
-    libgbm-dev \
     libgdbm-dev \
     libgles1 \
     libgles2 \
@@ -58,10 +58,7 @@ apt-fast install --no-install-recommends -yq \
     libncursesw5-dev \
     libnss-myhostname \
     libqmi-utils \
-    libsqlite3-dev \
     libssl-dev \
-    libtool \
-    libx264-dev \
     locales \
     llvm \
     nano \
@@ -72,14 +69,11 @@ apt-fast install --no-install-recommends -yq \
     openssh-server \
     ppp \
     rsyslog \
-    speedtest-cli \
     ssh \
-    sshfs \
     sudo \
     systemd \
     systemd-resolved \
     systemd-timesyncd \
-    traceroute \
     ubuntu-minimal \
     ubuntu-server \
     ubuntu-standard \
