@@ -14,7 +14,7 @@ sudo resize2fs $(findmnt -n -o SOURCE /)
 
 echo "symlink /usr/comma"
 sudo rm -rf /usr/comma
-sudo ln -snf $ROOT/userspace/usr/comma/ /usr/comma
+sudo ln -snf $ROOT/userspace/root/usr/comma/ /usr/comma
 
 echo "cp systemd services"
 for s in $(ls $ROOT/userspace/files/*.service); do
