@@ -21,22 +21,6 @@ bash -c "$(curl -sL https://git.io/vokNn)"
 export DEBIAN_FRONTEND=noninteractive
 apt-fast install --no-install-recommends -yq locales systemd adduser
 
-# Create privileged user
-useradd -G sudo -m -s /bin/bash $USERNAME
-echo "$USERNAME:$PASSWD" | chpasswd
-groupadd gpio
-groupadd gpu
-adduser $USERNAME root
-adduser $USERNAME video
-adduser $USERNAME gpio
-adduser $USERNAME adm
-adduser $USERNAME gpu
-adduser $USERNAME audio
-adduser $USERNAME disk
-adduser $USERNAME netdev
-adduser $USERNAME dialout
-adduser $USERNAME systemd-journal
-
 # Enable serial console on UART
 systemctl enable serial-getty@ttyS0.service
 
@@ -106,13 +90,6 @@ apt-fast install --no-install-recommends -yq \
     wireless-tools \
     zlib1g-dev
 
-rm -rf /var/lib/apt/lists/*
-
-# Create dirs
-mkdir /data && chown $USERNAME:$USERNAME /data
-mkdir /persist && chown $USERNAME:$USERNAME /persist
-mkdir /config && chown root:root /config
-
 # Disable pstore service that moves files out of /sys/fs/pstore
 systemctl disable systemd-pstore.service
 
@@ -141,4 +118,23 @@ apt-fast install --no-install-recommends -yq \
     hostapd \
     libgtk2.0-dev
 
-rm -rf /var/lib/apt/lists/*
+# Create privileged user
+useradd -G sudo -m -s /bin/bash $USERNAME
+echo "$USERNAME:$PASSWD" | chpasswd
+groupadd gpio
+groupadd gpu
+adduser $USERNAME root
+adduser $USERNAME video
+adduser $USERNAME gpio
+adduser $USERNAME adm
+adduser $USERNAME gpu
+adduser $USERNAME audio
+adduser $USERNAME disk
+adduser $USERNAME netdev
+adduser $USERNAME dialout
+adduser $USERNAME systemd-journal
+
+# Create dirs
+mkdir /data && chown $USERNAME:$USERNAME /data
+mkdir /persist && chown $USERNAME:$USERNAME /persist
+mkdir /config && chown root:root /config
