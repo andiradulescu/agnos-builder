@@ -131,9 +131,11 @@ RUN touch -r /lib/systemd/systemd /etc/fstab
 # Install kernel headers
 COPY ./output/linux-headers/include/ /usr/include/
 
-COPY ./userspace/irsc_util.c /tmp/agnos/
-RUN gcc -O2 -Wall -Wextra -o /tmp/irsc_util /home/$USERNAME/power_burn_max
+COPY --from=agnos-compiler-power-burn /tmp/power_burn_max /home/$USERNAME/power_burn_max
 RUN chown $USERNAME: /home/$USERNAME/power_burn_max
+
+COPY ./userspace/irsc_util.c /tmp/agnos/
+RUN gcc -O2 -Wall -Wextra -o /usr/bin/irsc_util /tmp/agnos/irsc_util.c
 
 # Setup systemd services
 COPY ./userspace/services.sh /tmp/agnos
