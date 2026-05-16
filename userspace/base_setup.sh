@@ -86,7 +86,6 @@ apt-fast install --no-install-recommends -yq \
     nano \
     net-tools \
     nload \
-    network-manager \
     openssl \
     ppp \
     smartmontools \

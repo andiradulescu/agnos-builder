@@ -33,6 +33,15 @@ COPY ./userspace/compile-modemmanager.sh /tmp/agnos/
 RUN --mount=type=cache,target=/root/.ccache,id=modemmanager,sharing=shared \
     /tmp/agnos/compile-modemmanager.sh
 
+# NetworkManager rebuilt with --disable-netplan (no /etc/netplan/NM-*.yaml writes)
+FROM agnos-compiler AS agnos-compiler-network-manager
+RUN sed -i 's/^Types: deb$/Types: deb deb-src/' /etc/apt/sources.list.d/ubuntu.sources && \
+    apt-get update && apt-get install -yq --no-install-recommends dpkg-dev fakeroot && \
+    cd /tmp && apt-get source network-manager && cd network-manager-*/ && \
+    echo 'NETPLAN += --disable-netplan' >> debian/rules && \
+    apt-get build-dep -yq --no-install-recommends network-manager && \
+    dpkg-buildpackage -b -us -uc
+
 # qtwayland5
 FROM agnos-compiler AS agnos-compiler-qtwayland5
 COPY ./userspace/qtwayland/*.deb /tmp/agnos/
@@ -61,6 +70,10 @@ ARG USERNAME=comma
 # Base system setup
 RUN echo "resolvconf resolvconf/linkify-resolvconf boolean false" | debconf-set-selections
 COPY ./userspace/base_setup.sh /tmp/agnos
+# Install custom NM before base_setup pulls the unpatched archive version
+COPY --from=agnos-compiler-network-manager /tmp/network-manager_*.deb /tmp/libnm0_*.deb /tmp/agnos/
+RUN apt-get update && apt-get install -yq --no-install-recommends /tmp/agnos/network-manager_*.deb /tmp/agnos/libnm0_*.deb && \
+    apt-mark hold network-manager libnm0
 RUN /tmp/agnos/base_setup.sh
 
 # Install openpilot dependencies
